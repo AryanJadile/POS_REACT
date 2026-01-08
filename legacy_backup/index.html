@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestoFlow POS</title>
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="shortcut icon" href="./icons/favicon/favicon.ico" />
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Left Section: Main Sales -->
+        <main class="main-sales">
+            <header class="sales-header">
+                <button class="menu-btn"><i class="fas fa-bars"></i></button>
+                <h1>RestoFlow</h1>
+                <div class="header-actions">
+
+                    <div class="search-wrapper">
+                        <input type="text" id="search-input" placeholder="Search RestoFlow">
+                        <button class="icon-btn" id="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+
+                    <button class="icon-btn" id="cart-toggle"><i class="fas fa-shopping-cart"></i></button>
+                </div>
+            </header>
+
+            <div class="category-wrapper">
+
+                <div class="category-card cat-blue" id="cat-trigger" onclick="toggleCategoryMenu()">
+                    <div class="cat-icon"><img height="48" width="48" src="./icons/icons8-category.gif"></div>
+                    <span>Category</span>
+                </div>
+
+                <div class="category-drawer" id="cat-drawer">
+
+                    <div class="category-card cat-orange" onclick="filterProducts('north')">
+                        <div class="cat-icon"><img width="40" height="40"
+                                src="https://img.icons8.com/color/96/naan.png"></div>
+                        <span>North</span>
+                    </div>
+
+                    <div class="category-card cat-red" onclick="filterProducts('south')">
+                        <div class="cat-icon"><img width="50" height="50"
+                                src="https://img.icons8.com/external-icongeek26-flat-icongeek26/64/external-masala-dosa-fine-dining-icongeek26-flat-icongeek26.png">
+                        </div>
+                        <span>South</span>
+                    </div>
+
+                    <div class="category-card cat-purple" onclick="filterProducts('chinese')">
+                        <div class="cat-icon"><img width="45" height="45"
+                                src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/external-chinese-food-food-delivery-flaticons-lineal-color-flat-icons.png">
+                        </div>
+                        <span>Chinese</span>
+                    </div>
+
+                    <div class="category-card cat-green" onclick="filterProducts('desserts')">
+                        <div class="cat-icon"><img width="48" height="48"
+                                src="https://img.icons8.com/color/48/doughnut.png"></div>
+                        <span>Desserts</span>
+                    </div>
+
+                    <div class="category-card cat-green" onclick="filterProducts('beverages')">
+                        <div class="cat-icon"><img width="50" height="50"
+                                src="https://img.icons8.com/dusk/64/tea--v1.png"></div>
+                        <span>Beverages</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="product-grid" id="product-container">
+                <!-- Products will be rendered here by JS -->
+            </div>
+        </main>
+
+        <!-- Right Section: Cart -->
+        <aside class="cart-section">
+            <div class="cart-header-row">
+                <h2 class="cart-title">Cart</h2>
+                <button class="icon-btn close-cart-btn" id="cart-close"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="cart-items-list" id="cart-items">
+                <!-- Cart items will be rendered here by JS -->
+                <p class='empty-cart-msg'>Cart is empty</p>
+            </div>
+
+            <div class="cart-footer">
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <span class="summary-val" id="subtotal-price">₹0.00</span>
+                </div>
+                <div class="summary-line">
+                    <span>Tax</span>
+                    <span class="summary-val" id="tax-price">₹0.00</span>
+                </div>
+                <button class="checkout-btn">Checkout</button>
+            </div>
+            <div class="dev-credit">
+                Developed with ❤️ by <b>Triveni Tech</b>
+            </div>
+        </aside>
+
+        <!-- Navigation Drawer -->
+        <div class="nav-overlay" id="nav-overlay"></div>
+        <aside class="nav-drawer" id="nav-drawer">
+            <div class="nav-header">
+                <h2>Menu</h2>
+                <button class="icon-btn" id="nav-close"><i class="fas fa-times"></i></button>
+            </div>
+            <nav class="nav-links">
+                <a href="admin.html" class="nav-link">
+                    <i class="fas fa-user-shield"></i> Admin Panel
+                </a>
+                <a href="#" class="nav-link" onclick="openChefLogin()">
+                    <i class="fas fa-fire"></i> Chef Panel
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CHEF LOGIN MODAL -->
+        <div id="chef-login-overlay" class="login-overlay d-none">
+            <div class="login-box">
+                <h2>👨‍🍳 Chef Access</h2>
+                <p>Enter kitchen password to open display.</p>
+                <input type="password" id="chef-pass" placeholder="Password">
+                <button onclick="checkChefLogin()">Open Kitchen</button>
+                <button onclick="closeChefLogin()" class="btn-cancel"
+                    style="margin-top: 10px; background: transparent; color: #aaa; border: 1px solid #444;">Cancel</button>
+                <p id="chef-login-error" class="error-msg d-none">Incorrect password!</p>
+            </div>
+        </div>
+    </div>
+    <!-- <script>console.log("Index HTML Inline Log verified");</script> -->
+    <script src="./scripts/script.js"></script>
+</body>
+
+</html>
