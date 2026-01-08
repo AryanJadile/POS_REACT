@@ -1,0 +1,407 @@
+.checkout-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* MODAL STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Dim background */
+    backdrop-filter: blur(4px);
+    /* Modern blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: scale(0.8);
+    animation: popIn 0.3s 0.1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy effect */
+}
+
+/* Big Green Checkmark */
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #e8f5e9;
+    color: var(--accent-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 20px auto;
+}
+
+.modal-content h2 {
+    font-family: 'Poppins', sans-serif;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.receipt-details {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.amount-text {
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.modal-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent-green);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-btn:hover {
+    background: #2d7a6b;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Add to bottom of checkout.css */
+
+.type-btn {
+    flex: 1;
+    padding: 15px;
+    background: white;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: #555;
+}
+
+.type-btn.selected {
+    border-color: var(--accent-green);
+    background-color: #e8f5e9;
+    color: var(--accent-green);
+}
+
+.pay-card {
+    background: white;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #555;
+}
+
+.pay-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.pay-card.selected {
+    border-color: var(--accent-green);
+    background-color: #e8f5e9;
+    color: var(--accent-green);
+}
+
+.checkout-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.checkout-header h1 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-primary);
+}
+
+.order-summary {
+    margin-bottom: 30px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-table th,
+.order-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.order-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.order-table td img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.total-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    font-size: 1.1rem;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+}
+
+.total-row.grand-total {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-green);
+    border-top: 2px solid var(--border-color);
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.back-btn {
+    background-color: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #f0f0f0;
+    color: var(--text-primary);
+}
+
+.place-order-btn {
+    background-color: var(--accent-green);
+    color: var(--white);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.place-order-btn:hover {
+    background-color: #2d7a6b;
+}
+
+/* Add to checkout.css */
+
+/* Specific styling for Cash Modal */
+.cash-pad {
+    text-align: left;
+    /* Override default centered modal text */
+    max-width: 450px;
+}
+
+.cash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.bill-info {
+    display: flex;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.bill-amount {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.cash-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+#cash-input,
+#split-cash-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.5rem;
+    /* Big text for numbers */
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#cash-input:focus,
+#split-cash-input:focus {
+    border-color: var(--accent-green);
+}
+
+/* Quick Buttons Row */
+.quick-cash-options {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    overflow-x: auto;
+}
+
+.quick-btn {
+    padding: 8px 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.quick-btn:hover {
+    background: #e8f5e9;
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+.change-display {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+}
+
+#cp-change-display {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--accent-green);
+}
+
+/* Disabled button state */
+.modal-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.brand-footer {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.brand-name {
+    font-weight: 800;
+    background: linear-gradient(45deg, #ff00cc, #333399);
+    /* Cool Gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pulseGlow 2s infinite;
+}
+
+/* Add to checkout.css */
+.receipt-logo {
+    height: 60px;
+    width: auto;
+    margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* Center it */
+}
+
+@keyframes pulseGlow {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 0, 204, 0.2);
+    }
+
+    50% {
+        text-shadow: 0 0 15px rgba(255, 0, 204, 0.5);
+        transform: scale(1.05);
+    }
+
+    100% {
+        text-shadow: 0 0 5px rgba(255, 0, 204, 0.2);
+    }
+}

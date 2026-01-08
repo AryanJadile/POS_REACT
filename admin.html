@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestoFlow Admin</title>
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="./styles/admin.css">
+    <link rel="shortcut icon" href="./icons/favicon/favicon.ico" />
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- LOGIN MODAL (Overlay) -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Admin Access</h2>
+            <p>Please enter the admin password used for the POS.</p>
+            <input type="password" id="admin-pass" placeholder="Password">
+            <button onclick="checkLogin()">Login</button>
+            <p id="login-error" class="error-msg d-none">Incorrect password!</p>
+            <a href="index.html" class="back-link">← Back to POS</a>
+        </div>
+    </div>
+
+    <div class="admin-container d-none" id="admin-app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>RestoFlow</h2>
+                <span>Admin Panel</span>
+            </div>
+
+            <nav>
+                <button class="nav-btn active" onclick="showSection('menu')">
+                    <i class="fas fa-utensils"></i> Menu Management
+                </button>
+                <button class="nav-btn" onclick="showSection('orders')">
+                    <i class="fas fa-history"></i> Order History
+                </button>
+                <button class="nav-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+
+            <!-- SECTION: MENU MANAGEMENT -->
+            <section id="section-menu" class="section active">
+                <header class="section-header">
+                    <h1>Menu Management</h1>
+                    <button class="primary-btn" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add New Item
+                    </button>
+                </header>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-menu-list">
+                            <!-- Items rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: ORDER HISTORY -->
+            <section id="section-orders" class="section d-none">
+                <header class="section-header">
+                    <h1>Order History</h1>
+                    <button class="icon-btn" id="refresh-orders-btn" onclick="fetchOrders()"><i
+                            class="fas fa-sync"></i></button>
+                </header>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date/Time</th>
+                                <th>Payment</th>
+                                <th>Total</th>
+                                <th>Items</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-order-list">
+                            <!-- Orders rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ADD ITEM MODAL -->
+    <div id="add-modal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Item</h3>
+                <button class="close-btn" onclick="closeAddModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" id="new-name" placeholder="e.g. Butter Paneer">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="new-category">
+                        <option value="north">North Indian</option>
+                        <option value="south">South Indian</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="desserts">Desserts</option>
+                        <option value="beverages">Beverages</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" id="new-price" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="new-img" placeholder="https://...">
+                    <small>Or use a local path like ./img/my-dish.jpg</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+                <button class="btn-confirm" id="btn-save" onclick="saveProduct()">Add Item</button>
+            </div>
+        </div>
+    </div>
+    <!-- SUCCESS MODAL -->
+    <div id="success-modal" class="modal d-none">
+        <div class="modal-content success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Success!</h3>
+            <p>Item added to the menu successfully.</p>
+            <button class="btn-success-close" onclick="closeSuccessModal()">Awesome!</button>
+        </div>
+    </div>
+
+    <script src="./scripts/admin.js"></script>
+</body>
+
+</html>

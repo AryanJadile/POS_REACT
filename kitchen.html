@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDS - Kitchen Display System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #4ade80;
+        }
+
+        .live-indicator {
+            background: #ef4444;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* THE GRID */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* ORDER CARD */
+        .order-card {
+            background: #262626;
+            border-left: 5px solid #fbbf24;
+            /* Yellow = Pending */
+            border-radius: 8px;
+            padding: 20px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .time-ago {
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .items-list {
+            margin: 15px 0;
+            border-top: 1px dashed #444;
+            padding-top: 10px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 1.1rem;
+        }
+
+        .qty-badge {
+            background: #444;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: #4ade80;
+            /* Green */
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .action-btn:hover {
+            background: #22c55e;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-box {
+            background: #262626;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #444;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 320px;
+            width: 90%;
+            animation: scaleUp 0.3s ease;
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .modal-box p {
+            color: #aaa;
+            margin-bottom: 25px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancel:hover {
+            background: #333;
+            color: white;
+        }
+
+        .btn-confirm {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-confirm:hover {
+            background: #dc2626;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.9);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>👨‍🍳 RESTOFLOW KITCHEN</h1>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button id="sound-btn" onclick="enableSound()"
+                style="padding: 5px 15px; border-radius: 20px; border: 1px solid #666; background: transparent; color: #aaa; cursor: pointer;">
+                🔇 Enable Sound
+            </button>
+            <button onclick="logoutChef()"
+                style="padding: 5px 15px; border-radius: 20px; border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.1); color: #ef4444; cursor: pointer;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <div class="live-indicator">● LIVE FEED</div>
+        </div>
+    </div>
+
+    <div class="orders-grid" id="kitchen-grid">
+        <p style="color: #666;">Waiting for new orders...</p>
+    </div>
+
+    <!-- LOGOUT MODAL -->
+    <div id="logout-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h3>🔒 Lock Kitchen?</h3>
+            <p>You will need the password to enter again.</p>
+            <div class="modal-actions">
+                <button onclick="closeLogoutModal()" class="btn-cancel">Cancel</button>
+                <button onclick="confirmLogout()" class="btn-confirm">Lock Screen</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bell-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+    <script src="./scripts/kitchen.js"></script>
+</body>
+
+</html>

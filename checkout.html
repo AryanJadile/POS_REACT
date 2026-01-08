@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - RestoFlow POS</title>
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="./styles/checkout.css">
+    <link rel="shortcut icon" href="./icons/favicon/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container" style="overflow-y: auto;">
+        <div class="checkout-container">
+            <header class="checkout-header">
+                <h1>Billing</h1>
+                <p>Review your order before placing it.</p>
+            </header>
+
+            <div class="order-summary">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="checkout-items">
+                        <!-- Items will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="checkout-subtotal">₹0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Tax (5%):</span>
+                    <span id="checkout-tax">₹0.00</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Total:</span>
+                    <span id="checkout-total">₹0.00</span>
+                </div>
+            </div>
+
+            <div class="payment-selection-area"
+                style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: #555;">Order Type</h3>
+                <div class="toggle-row" style="display: flex; gap: 15px; margin-bottom: 30px;">
+                    <button class="type-btn selected" onclick="selectOrderType(this, 'Dine-In')">
+                        <i class="fas fa-utensils"></i> Dine-In
+                    </button>
+                    <button class="type-btn" onclick="selectOrderType(this, 'Takeaway')">
+                        <i class="fas fa-shopping-bag"></i> Takeaway
+                    </button>
+                </div>
+
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: #555;">Payment Method</h3>
+                <div class="payment-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px;">
+                    <div class="pay-card selected" onclick="selectPaymentMethod(this, 'Cash')">
+                        <i class="fas fa-money-bill-wave" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                        <span>Cash</span>
+                    </div>
+                    <div class="pay-card" onclick="selectPaymentMethod(this, 'Card Machine')">
+                        <i class="fas fa-credit-card" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                        <span>Card</span>
+                    </div>
+                    <div class="pay-card" onclick="selectPaymentMethod(this, 'UPI')">
+                        <i class="fas fa-qrcode" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                        <span>UPI / Online</span>
+                    </div>
+                    <div class="pay-card" onclick="selectPaymentMethod(this, 'Split')">
+                        <i class="fas fa-columns" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                        <span>Split Pay</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="back-btn" onclick="window.location.href='index.html'">Back to Menu</button>
+                <button class="place-order-btn" id="confirm-btn">Confirm & Pay</button>
+            </div>
+        </div>
+    </div>
+    <div id="success-modal" class="modal-overlay d-none">
+        <div class="modal-content">
+            <img src="./img/logo.jpg" class="receipt-logo" alt="Logo">
+            <!-- <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div> -->
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for dining with RestoFlow.</p>
+
+            <div class="receipt-details">
+                <div class="receipt-row">
+                    <span>Transaction ID:</span>
+                    <span id="modal-id" style="font-size: 0.8rem; color: #777;">#12345</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Payment Method:</span>
+                    <span id="modal-method">UPI</span>
+                </div>
+                <div class="receipt-row d-none" id="row-cash-given">
+                    <span>Cash Received:</span>
+                    <span id="modal-cash-given">₹0.00</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Amount Paid:</span>
+                    <span id="modal-amount" class="amount-text">₹0.00</span>
+                </div>
+                <div class="receipt-row d-none" id="row-change">
+                    <span style="color: var(--accent-green); font-weight: 600;">Change to Return:</span>
+                    <span id="modal-change"
+                        style="font-weight: 800; font-size: 0.8rem; color: var(--accent-green);">₹0.00</span>
+                </div>
+
+            </div>
+
+            <div class="modal-actions" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button class="modal-btn" style="background-color: #555;" onclick="printReceipt()">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <button class="modal-btn" onclick="finalizeOrder()">Start New Order</button>
+            </div>
+            <div class="brand-footer">
+                <p>Powered by <span class="brand-name">Triveni Tech</span> 🚀</p>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="cash-modal" class="modal-overlay d-none">
+        <div class="modal-content cash-pad">
+            <div class="cash-header">
+                <h3>Cash Payment</h3>
+                <button class="close-modal-btn" onclick="closeCashModal()">&times;</button>
+            </div>
+
+            <div class="bill-info">
+                <span>Bill Total:</span>
+                <span class="bill-amount" id="cp-bill-total">₹0.00</span>
+            </div>
+
+            <div class="cash-input-group">
+                <label>Cash Received</label>
+                <input type="number" id="cash-input" placeholder="Enter amount..." oninput="calculateChange()">
+            </div>
+
+            <div class="quick-cash-options" id="quick-cash-btns">
+            </div>
+
+            <div class="change-display">
+                <span>Change to Return:</span>
+                <span id="cp-change-display">₹0.00</span>
+            </div>
+
+            <button class="modal-btn" id="confirm-cash-btn" onclick="submitCashPayment()" disabled>
+                Complete Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- SPLIT PAYMENT MODAL -->
+    <div id="split-modal" class="modal-overlay d-none">
+        <div class="modal-content cash-pad">
+            <div class="cash-header">
+                <h3>Split Payment</h3>
+                <button class="close-modal-btn" onclick="closeSplitModal()">&times;</button>
+            </div>
+
+            <div class="bill-info">
+                <span>Total Bill:</span>
+                <span class="bill-amount" id="sp-bill-total">₹0.00</span>
+            </div>
+
+            <div class="cash-input-group">
+                <label>Amount to pay in CASH</label>
+                <input type="number" id="split-cash-input" placeholder="Enter cash amount..."
+                    oninput="calculateSplit()">
+            </div>
+
+            <div class="change-display">
+                <span>Balance (Pay Online):</span>
+                <span id="sp-balance-display"
+                    style="font-weight: 800; color: var(--accent-green); font-size: 1.2rem;">₹0.00</span>
+            </div>
+
+            <button class="modal-btn" id="confirm-split-btn" onclick="submitSplitPayment()" disabled>
+                Proceed to Online Pay
+            </button>
+        </div>
+    </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="./scripts/checkout.js"></script>
+</body>
+
+</html>
