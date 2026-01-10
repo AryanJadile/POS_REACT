@@ -26,14 +26,14 @@ const Header = ({ onMenuClick, onSearch }) => {
             <button className="menu-btn" onClick={onMenuClick}>
                 <i className="fas fa-bars"></i>
             </button>
-            <h1>RestoFlow</h1>
+            <h1>SwiftServe</h1>
             <div className="header-actions">
                 <div className="search-wrapper">
                     <input
                         type="text"
                         id="search-input"
                         className={isSearchActive ? 'active' : ''}
-                        placeholder="Search RestoFlow"
+                        placeholder="Search SwiftServe"
                         value={searchTerm}
                         onChange={handleSearchChange}
                         onBlur={() => !searchTerm && setIsSearchActive(false)}
